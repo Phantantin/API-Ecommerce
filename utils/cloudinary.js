@@ -30,10 +30,10 @@
 const cloudinary = require('cloudinary');
 
 
-cloudinary.config({
-  cloud_name: "dfc9wz4r8",
-  api_key: "232953888427314",
-  api_secret: "wdSsqQbN9SelzpuaZhmdc5AHAc8",
+cloudinary.v2.config({
+  cloud_name: 'dfc9wz4r8',
+  api_key: '232953888427314',
+  api_secret: 'wdSsqQbN9SelzpuaZhmdc5AHAc8',
   secure: true,
 });
 
