@@ -31,10 +31,11 @@ const cloudinary = require('cloudinary');
 
 
 cloudinary.config({
-    cloud_name: process.env.CLOUD_NAME,
-    api_key: process.env.API_KEY,
-    api_secret: process.env.SECRET_KEY,
-  });
+  cloud_name: "dfc9wz4r8",
+  api_key: "232953888427314",
+  api_secret: "wdSsqQbN9SelzpuaZhmdc5AHAc8",
+  secure: true,
+});
 
 const cloudinaryUploadImg = async (fileToUploads) => {
     return new Promise((resolve) => {
