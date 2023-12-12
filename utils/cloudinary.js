@@ -9,6 +9,10 @@ cloudinary.config({
     api_secret: process.env.SECRET_KEY,
     
   });
+console.log(process.env.CLOUD_NAME);
+console.log(process.env.API_KEY);
+console.log(process.env.SECRET_KEY);
+
 
 
   const cloudinaryUploadImg = async (fileToUploads) => {

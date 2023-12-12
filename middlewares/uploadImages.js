@@ -1,3 +1,4 @@
+
 const multer = require('multer');
 const sharp = require('sharp');
 const path = require('path');
@@ -60,13 +61,14 @@ const productImgResize = async (req, res, next) => {
                 .jpeg({ quality: 90 })
                 .toFile(tempFilePath);
 
-            const uploadResult = await cloudinaryUploadImg(tempFilePath, 'images'); // Upload ảnh từ thư mục tạm lên Cloudinary
+            const uploadResult = await cloudinaryUploadImg(tempFilePath); // Upload ảnh từ thư mục tạm lên Cloudinary
 
             fs.unlinkSync(tempFilePath); // Xóa ảnh tạm thời sau khi upload lên Cloudinary
         })
     );
     next();
 };
+
 
 const blogImgResize = async(req, res, next) =>{
     if(!req.files) return next();
