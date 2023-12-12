@@ -40,27 +40,47 @@ const uploadPhoto = multer({
     limits: { fieldSize: 2000000 },
 });
 
+
 const productImgResize = async (req, res, next) => {
     if (!req.files) return next();
-    
+
     await Promise.all(
         req.files.map(async (file) => {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Khai báo uniqueSuffix ở đây
-            const tempFilePath = path.join(uploadDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
-            const resizedFilePath = path.join(uploadDir, 'resized-' + file.fieldname + '-' + uniqueSuffix + '.JPEG');
+            try {
+                const result = await cloudinaryUploadImg(file.path);
+                console.log('Uploaded to Cloudinary:', result);
+                
+                // Tiếp theo, bạn có thể làm gì đó với URL đã upload lên Cloudinary
 
-            await sharp(file.path)
-                .resize(300, 300)
-                .toFormat('jpeg')
-                .jpeg({ quality: 90 })
-                .toFile(resizedFilePath);
-
-            console.log('resizedFilePath file path:', resizedFilePath);
-            console.log('Temporary file path:', tempFilePath);
+            } catch (error) {
+                console.error('Error uploading to Cloudinary:', error);
+            }
         })
     );
     next();
 };
+
+// const productImgResize = async (req, res, next) => {
+//     if (!req.files) return next();
+    
+//     await Promise.all(
+//         req.files.map(async (file) => {
+//             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Khai báo uniqueSuffix ở đây
+//             const tempFilePath = path.join(uploadDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
+//             const resizedFilePath = path.join(uploadDir, 'resized-' + file.fieldname + '-' + uniqueSuffix + '.JPEG');
+
+//             await sharp(file.path)
+//                 .resize(300, 300)
+//                 .toFormat('jpeg')
+//                 .jpeg({ quality: 90 })
+//                 .toFile(resizedFilePath);
+
+//             console.log('resizedFilePath file path:', resizedFilePath);
+//             console.log('Temporary file path:', tempFilePath);
+//         })
+//     );
+//     next();
+// };
 
 
 const blogImgResize = async(req, res, next) => {
