@@ -1,3 +1,4 @@
+const { cloudinaryUploadImg } = require('../utils/cloudinary'); // Thay đổi đường dẫn đến tệp chứa cloudinaryUploadImg
 
 const multer = require('multer');
 const sharp = require('sharp');
