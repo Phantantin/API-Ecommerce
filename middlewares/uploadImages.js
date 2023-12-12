@@ -38,9 +38,7 @@ const productImgResize = async (req, res, next) => {
     
     await Promise.all(
         req.files.map(async (file) => {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-            // const tempFilePath = path.join(tempDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
-            const tempFilePath = path.join(uploadDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
+            const tempFilePath = path.join(tempDir, file.filename); // Lưu ảnh tạm thời vào thư mục tạm
             await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
@@ -69,3 +67,5 @@ const blogImgResize = async(req, res, next) => {
 };
 
 module.exports = { uploadPhoto, productImgResize, blogImgResize };
+
+module.exports = {uploadPhoto, productImgResize, blogImgResize};
