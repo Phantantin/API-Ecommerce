@@ -7,14 +7,8 @@ const os = require('os');
 
 
 const tempDir = os.tmpdir(); // Đường dẫn thư mục tạm thời
-// const uploadDir = path.join(__dirname, "../public/images/"); // Đường dẫn thư mục upload
-const uploadDir = 'D:/Ecommerce-Deploy/backend/public/images/';
+const uploadDir = path.join(__dirname, "../public/images/"); // Đường dẫn thư mục upload
 
-console.log(uploadDir)
-// Kiểm tra và tạo thư mục nếu chưa tồn tại
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
 const multerStorage = multer.diskStorage({
     destination: function(req, file, cb) {
         cb(null, tempDir); // Lưu ảnh tạm vào thư mục tạm
