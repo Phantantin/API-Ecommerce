@@ -1,76 +1,71 @@
-const { cloudinaryUploadImg } = require('../utils/cloudinary'); // Thay đổi đường dẫn đến tệp chứa cloudinaryUploadImg
-
+const { cloudinaryUploadImg } = require('../utils/cloudinary');
 const multer = require('multer');
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
-
 const os = require('os');
 
+
+const tempDir = os.tmpdir(); // Đường dẫn thư mục tạm thời
+const uploadDir = path.join(__dirname, "../public/images/"); // Đường dẫn thư mục upload
+
 const multerStorage = multer.diskStorage({
-    destination: function(req,file, cb){
-        cb(null, path.join(__dirname, "../public/images/"));
+    destination: function(req, file, cb) {
+        cb(null, tempDir); // Lưu ảnh tạm vào thư mục tạm
     },
-    filename: function(req,file, cb){
+    filename: function(req, file, cb) {
         const uniquesuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-        cb(null, file.fieldname+ "-" + uniquesuffix + ".JPEG");
+        cb(null, file.fieldname + "-" + uniquesuffix + ".JPEG");
     },
 });
 
-const multerFilter = (req, file, cb)=>{
-    if(file.mimetype.startsWith("image")){
+const multerFilter = (req, file, cb) => {
+    if (file.mimetype.startsWith("image")) {
         cb(null, true);
-    }else{
-        cb({
-            message: "Unsupported file format",
-        }, false)
+    } else {
+        cb({ message: "Unsupported file format" }, false);
     }
-}
+};
 
 const uploadPhoto = multer({
     storage: multerStorage,
     fileFilter: multerFilter,
-    limits: {fieldSize: 2000000},
+    limits: { fieldSize: 2000000 },
 });
-
-const tempDir = os.tmpdir(); // Tạo thư mục tạm thời
-
 
 const productImgResize = async (req, res, next) => {
     if (!req.files) return next();
+    
     await Promise.all(
         req.files.map(async (file) => {
-            const tempFilePath = path.join(tempDir, file.filename); // Lưu ảnh tạm thời vào thư mục tạm
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+            // const tempFilePath = path.join(tempDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
+            const tempFilePath = path.join(uploadDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
             await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
                 .jpeg({ quality: 90 })
                 .toFile(tempFilePath);
-
-            const uploadResult = await cloudinaryUploadImg(tempFilePath); // Upload ảnh từ thư mục tạm lên Cloudinary
-
-            fs.unlinkSync(tempFilePath); // Xóa ảnh tạm thời sau khi upload lên Cloudinary
+            // ...
+            console.log('Temporary file path:', tempFilePath);
         })
-    );
+        
+    );    
     next();
 };
 
-
-const blogImgResize = async(req, res, next) =>{
-    if(!req.files) return next();
+const blogImgResize = async(req, res, next) => {
+    if (!req.files) return next();
     await Promise.all(
-        req.files.map(async(file) =>{
+        req.files.map(async (file) => {
             await sharp(file.path)
                 .resize(300, 300)
                 .toFormat("jpeg")
-                .jpeg({quality: 90})
-                .toFile(`public/images/blogs/${file.filename}`);
-            // fs.unlinkSync(`public/images/blogs/${file.filename}`);
+                .jpeg({ quality: 90 })
+                .toFile(path.join(uploadDir, `blogs/${file.filename}`)); // Lưu ảnh vào thư mục tương ứng
         })
     );
     next();
 };
 
-
-
-module.exports = {uploadPhoto, productImgResize, blogImgResize};
+module.exports = { uploadPhoto, productImgResize, blogImgResize };
