@@ -38,9 +38,9 @@ const cloudinary = require('cloudinary');
 //   });
 
 cloudinary.v2.config({
-  cloud_name: 'dfc9wz4r8',
-  api_key: '232953888427314',
-  api_secret: 'wdSsqQbN9SelzpuaZhmdc5AHAc8',
+  cloud_name: '',
+  api_key: '',
+  api_secret: '',
   secure: true,
 });
 
