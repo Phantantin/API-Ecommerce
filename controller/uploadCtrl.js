@@ -2,28 +2,44 @@ const {cloudinaryUploadImg, cloudinaryDeleteImg} = require('../utils/cloudinary'
 const fs = require('fs');
 const asyncHandler = require('express-async-handler');
 
-const uploadImages = asyncHandler(async( req, res) =>{
+// const uploadImages = asyncHandler(async( req, res) =>{
+//     try {
+//         const uploader = (path) => cloudinaryUploadImg(path, "images");
+//         const urls = [];
+//         const files = req.files;
+//         for(const file of files){
+//             const {path} = file;
+//             const newpath = await uploader(path);
+//             console.log(newpath);
+//             urls.push(newpath);
+//             fs.unlinkSync(path);
+//         }
+//         const images = urls.map((file) =>{
+//             return file;
+//         });
+//         res.json(images);
+//     } catch (error) {
+//         throw new Error(error)
+//     }
+// });
+
+const uploadImages = async (req, res) => {
     try {
-        const uploader = (path) => cloudinaryUploadImg(path, "images");
-        const urls = [];
         const files = req.files;
-        for(const file of files){
-            const {path} = file;
-            const newpath = await uploader(path);
-            console.log(newpath);
-            urls.push(newpath);
-            fs.unlinkSync(path);
+        const uploadedImages = [];
+
+        for (const file of files) {
+            const { path } = file;
+            const uploadedImage = await cloudinaryUploadImg(path);
+            uploadedImages.push(uploadedImage);
+            fs.unlinkSync(path); // Xóa file sau khi đã upload lên Cloudinary
         }
-        const images = urls.map((file) =>{
-            return file;
-        });
-        res.json(images);
+
+        res.json(uploadedImages);
     } catch (error) {
-        throw new Error(error)
+        res.status(500).json({ message: 'Error uploading images' });
     }
-});
-
-
+};
 
 //
 const deleteImages = asyncHandler(async( req, res) =>{
