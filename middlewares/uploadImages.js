@@ -48,7 +48,7 @@ const productImgResize = async (req, res, next) => {
                 .toFile(tempFilePath);
 
             const uploadResult = await cloudinaryUploadImg(tempFilePath); // Upload ảnh từ thư mục tạm lên Cloudinary
-
+console.log(tempFilePath)
             fs.unlinkSync(tempFilePath); // Xóa ảnh tạm thời sau khi upload lên Cloudinary
         })
     );
