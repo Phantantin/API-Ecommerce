@@ -38,18 +38,8 @@ const productImgResize = async (req, res, next) => {
     
     await Promise.all(
         req.files.map(async (file) => {
-
-            // const tempFilePath = path.join(tempDir, file.filename); // Lưu ảnh tạm thời vào thư mục tạm
-            // await sharp(file.path)
-            //     .resize(300, 300)
-            //     .toFormat('jpeg')
-            //     .jpeg({ quality: 90 })
-            //     .toFile(tempFilePath);
-            // // ...
-
-
+            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Khai báo uniqueSuffix ở đây
             const tempFilePath = path.join(tempDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
-            // ...
             const resizedFilePath = path.join(uploadDir, 'resized-' + file.fieldname + '-' + uniqueSuffix + '.JPEG');
 
             await sharp(file.path)
@@ -61,10 +51,10 @@ const productImgResize = async (req, res, next) => {
             console.log('resizedFilePath file path:', resizedFilePath);
             console.log('Temporary file path:', tempFilePath);
         })
-        
-    );    
+    );
     next();
 };
+
 
 const blogImgResize = async(req, res, next) => {
     if (!req.files) return next();
@@ -81,5 +71,3 @@ const blogImgResize = async(req, res, next) => {
 };
 
 module.exports = { uploadPhoto, productImgResize, blogImgResize };
-
-module.exports = {uploadPhoto, productImgResize, blogImgResize};
