@@ -41,6 +41,7 @@ const productImgResize = async (req, res, next) => {
     await Promise.all(
         req.files.map(async (file) => {
             const tempFilePath = path.join(tempDir, file.filename); // Lưu ảnh tạm thời vào thư mục tạm
+             console.log('Temporary file path:', tempFilePath); // Thêm dòng này để kiểm tra đường dẫn file tạm thời
             await sharp(file.path)
                 .resize(300, 300)
                 .toFormat('jpeg')
@@ -48,7 +49,7 @@ const productImgResize = async (req, res, next) => {
                 .toFile(tempFilePath);
 
             const uploadResult = await cloudinaryUploadImg(tempFilePath); // Upload ảnh từ thư mục tạm lên Cloudinary
-console.log(tempFilePath)
+
             fs.unlinkSync(tempFilePath); // Xóa ảnh tạm thời sau khi upload lên Cloudinary
         })
     );
