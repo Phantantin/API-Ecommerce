@@ -1,7 +1,7 @@
 const express = require('express');
 const { uploadImages, deleteImages } = require('../controller/uploadCtrl');
 const { authMiddleware, isAdmin } = require('../middlewares/authMiddleware');
-const { uploadPhoto, productImgResize } = require('../middlewares/uploadImages');
+const { uploadPhoto } = require('../middlewares/uploadImages');
 const router = express.Router();
 
 //put
