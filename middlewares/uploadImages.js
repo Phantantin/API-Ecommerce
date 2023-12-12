@@ -41,15 +41,42 @@ const uploadPhoto = multer({
 });
 
 
+// const productImgResize = async (req, res, next) => {
+//     if (!req.files) return next();
+
+//     await Promise.all(
+//         req.files.map(async (file) => {
+//             try {
+//                 const result = await cloudinaryUploadImg(file.path);
+//                 console.log('Uploaded to Cloudinary:', result);
+                
+//                 // Tiếp theo, bạn có thể làm gì đó với URL đã upload lên Cloudinary
+
+//             } catch (error) {
+//                 console.error('Error uploading to Cloudinary:', error);
+//             }
+//         })
+//     );
+//     next();
+// };
+
 const productImgResize = async (req, res, next) => {
     if (!req.files) return next();
 
     await Promise.all(
         req.files.map(async (file) => {
             try {
-                const result = await cloudinaryUploadImg(file.path);
+                // Resize ảnh trước khi upload lên Cloudinary
+                const resizedImage = await sharp(file.path)
+                    .resize(300, 300)
+                    .toFormat("jpeg")
+                    .jpeg({ quality: 90 })
+                    .toBuffer();
+
+                // Upload ảnh đã resize lên Cloudinary
+                const result = await cloudinaryUploadImg(resizedImage);
                 console.log('Uploaded to Cloudinary:', result);
-                
+
                 // Tiếp theo, bạn có thể làm gì đó với URL đã upload lên Cloudinary
 
             } catch (error) {
@@ -59,6 +86,34 @@ const productImgResize = async (req, res, next) => {
     );
     next();
 };
+
+
+const blogImgResize = async (req, res, next) => {
+    if (!req.files) return next();
+
+    await Promise.all(
+        req.files.map(async (file) => {
+            try {
+                // Resize ảnh
+                const resizedImage = await sharp(file.path)
+                    .resize(300, 300)
+                    .toFormat("jpeg")
+                    .jpeg({ quality: 90 })
+                    .toBuffer();
+
+                // Upload ảnh đã resize lên Cloudinary
+                const cloudinaryResult = await cloudinaryUploadImg(resizedImage);
+
+                console.log('Uploaded to Cloudinary:', cloudinaryResult);
+                // Tiếp theo, bạn có thể làm gì đó với URL đã upload lên Cloudinary
+            } catch (error) {
+                console.error('Error uploading to Cloudinary:', error);
+            }
+        })
+    );
+    next();
+};
+
 
 // const productImgResize = async (req, res, next) => {
 //     if (!req.files) return next();
@@ -83,18 +138,18 @@ const productImgResize = async (req, res, next) => {
 // };
 
 
-const blogImgResize = async(req, res, next) => {
-    if (!req.files) return next();
-    await Promise.all(
-        req.files.map(async (file) => {
-            await sharp(file.path)
-                .resize(300, 300)
-                .toFormat("jpeg")
-                .jpeg({ quality: 90 })
-                .toFile(path.join(uploadDir, `blogs/${file.filename}`)); // Lưu ảnh vào thư mục tương ứng
-        })
-    );
-    next();
-};
+// const blogImgResize = async(req, res, next) => {
+//     if (!req.files) return next();
+//     await Promise.all(
+//         req.files.map(async (file) => {
+//             await sharp(file.path)
+//                 .resize(300, 300)
+//                 .toFormat("jpeg")
+//                 .jpeg({ quality: 90 })
+//                 .toFile(path.join(uploadDir, `blogs/${file.filename}`)); // Lưu ảnh vào thư mục tương ứng
+//         })
+//     );
+//     next();
+// };
 
 module.exports = { uploadPhoto, productImgResize, blogImgResize };
