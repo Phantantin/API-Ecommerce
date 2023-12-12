@@ -9,12 +9,12 @@ const os = require('os');
 const tempDir = os.tmpdir(); // Đường dẫn thư mục tạm thời
 // const uploadDir = path.join(__dirname, "../public/images/"); // Đường dẫn thư mục upload
 
-const uploadDir = 'D:/Ecommerce-Deploy/backend/public/images/';
+// const uploadDir = 'D:/Ecommerce-Deploy/backend/public/images/';
 
-// Kiểm tra và tạo thư mục nếu chưa tồn tại
-if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
-}
+// // Kiểm tra và tạo thư mục nếu chưa tồn tại
+// if (!fs.existsSync(uploadDir)) {
+//     fs.mkdirSync(uploadDir, { recursive: true });
+// }
 
 const multerStorage = multer.diskStorage({
     destination: function(req, file, cb) {
