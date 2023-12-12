@@ -39,7 +39,7 @@ const productImgResize = async (req, res, next) => {
     await Promise.all(
         req.files.map(async (file) => {
             const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9); // Khai báo uniqueSuffix ở đây
-            const tempFilePath = path.join(tempDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
+            const tempFilePath = path.join(uploadDir, file.fieldname + '-' + uniqueSuffix + '.JPEG');
             const resizedFilePath = path.join(uploadDir, 'resized-' + file.fieldname + '-' + uniqueSuffix + '.JPEG');
 
             await sharp(file.path)
